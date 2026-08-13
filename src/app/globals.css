@@ -52,3 +52,51 @@ footer{height:38px;display:flex;justify-content:space-between;align-items:end;co
 .view-data .hero,.view-data .metric-grid,.view-data .split-grid,.view-data .lower-grid,.view-data .settings-panel{display:none}.view-data .workspace-grid{margin-top:25px}
 .view-settings .hero,.view-settings .metric-grid,.view-settings .split-grid,.view-settings .lower-grid,.view-settings .workspace-grid{display:none}.view-settings .settings-panel{margin-top:25px}
 @media(max-width:850px){.organization small{display:none}.organization>span:nth-child(2){min-width:auto}.period{display:none}}
+
+/* Log AI activity widget */
+.log-widget{border-top:1px solid #edf0ee;margin-top:20px;padding-top:20px}
+.log-widget .panel-title{margin-bottom:14px}
+.log-widget .panel-title h3{font-size:15px}
+.log-form{display:grid;gap:10px;margin-bottom:18px}
+.log-input{width:100%;border:1px solid var(--line);border-radius:7px;height:40px;padding:0 13px;font-size:11px;font-family:inherit;color:var(--ink);background:#fff}
+.log-input:focus{outline:2px solid var(--green);outline-offset:1px}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px}
+.tag-chip{border:1px solid var(--line);background:#fff;color:#5d6963;font-size:9px;font-weight:700;padding:6px 10px;border-radius:20px}
+.tag-chip.selected{background:#1c382c;border-color:#1c382c;color:var(--lime)}
+.log-submit{width:auto;display:inline-flex;align-items:center;gap:10px;padding:0 15px;justify-self:start}
+.log-feed{display:grid;gap:2px}
+.log-feed-item{border-top:1px solid #f0f2f1;padding:12px 2px}
+.log-feed-item:first-child{border-top:0}
+.log-tag{display:inline-block;font-size:7px;font-weight:800;letter-spacing:.06em;color:#18704d;background:#e8f5ed;padding:3px 7px;border-radius:10px;margin-bottom:7px}
+.log-feed-item p{margin:0 0 6px;font-size:10px;line-height:1.5;color:var(--ink)}
+.log-feed-meta{display:flex;justify-content:space-between;font-size:8px;color:#909995}
+/* Log AI activity widget */
+.log-widget{border-top:1px solid #edf0ee;margin-top:20px;padding-top:20px}
+.log-widget .panel-title{margin-bottom:14px}
+.log-widget .panel-title h3{font-size:15px}
+.log-form{display:grid;gap:16px;margin-bottom:18px}
+.log-field{display:grid;gap:7px}
+.log-field-label{font-size:9px;font-weight:700;letter-spacing:.04em;color:#7e8883;text-transform:uppercase}
+.log-input{width:100%;border:1px solid var(--line);border-radius:7px;height:40px;padding:0 13px;font-size:11px;font-family:inherit;color:var(--ink);background:#fff}
+.log-input:focus{outline:2px solid var(--green);outline-offset:1px}
+.tool-select-row{display:flex;flex-wrap:wrap;gap:7px}
+.tool-select-chip{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;color:#4e5954;font-size:10px;font-weight:700;padding:6px 12px 6px 6px;border-radius:20px}
+.tool-select-chip.selected{border-color:#1c382c;background:#f4f7f3}
+.tool-select-chip .tool-logo{width:20px;height:20px;font-size:8px;border-radius:5px}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px}
+.tag-chip{border:1px solid var(--line);background:#fff;color:#5d6963;font-size:9px;font-weight:700;padding:6px 10px;border-radius:20px}
+.tag-chip.selected{background:#1c382c;border-color:#1c382c;color:var(--lime)}
+.hours-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.hours-input{width:64px;height:31px;border:1px solid var(--line);border-radius:7px;padding:0 8px;font-size:10px;font-family:inherit;color:var(--ink);background:#fff}
+.hours-preview{font-size:9px;color:#18704d;font-weight:700;margin-left:2px}
+.log-submit{width:auto;display:inline-flex;align-items:center;gap:10px;padding:0 15px;justify-self:start}
+.log-feed{display:grid;gap:2px}
+.log-feed-item{border-top:1px solid #f0f2f1;padding:12px 2px}
+.log-feed-item:first-child{border-top:0}
+.log-feed-head{display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap}
+.log-feed-head strong{font-size:10px}
+.tool-logo.sm{width:20px;height:20px;font-size:8px;border-radius:5px}
+.log-tag{display:inline-block;font-size:7px;font-weight:800;letter-spacing:.06em;color:#18704d;background:#e8f5ed;padding:3px 7px;border-radius:10px}
+.log-kpi{margin-left:auto;font-size:9px;font-weight:800;color:#6557d9;background:#eeebff;padding:3px 8px;border-radius:10px}
+.log-feed-item p{margin:0 0 6px;font-size:10px;line-height:1.5;color:var(--ink)}
+.log-feed-meta{display:flex;justify-content:space-between;font-size:8px;color:#909995}

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
 const departments = [
@@ -20,6 +23,35 @@ const tools = [
   { initials: "M", name: "Gemini for Workspace", users: "229 / 620", change: "−4%", roi: "0.9×", color: "blue" },
 ];
 
+const aiTools = [
+  { name: "Claude Enterprise", initials: "C", color: "violet" },
+  { name: "GitHub Copilot", initials: "G", color: "dark" },
+  { name: "ChatGPT Enterprise", initials: "O", color: "green" },
+  { name: "Gemini for Workspace", initials: "M", color: "blue" },
+];
+
+const taskTypes = ["Drafting", "Research", "Code review", "Decision support", "Meeting notes"];
+const hoursPresets = [0.5, 1, 2, 4];
+const VALUE_PER_HOUR = 86; // matches "Value of time" in Settings
+
+type LogEntry = {
+  id: number;
+  text: string;
+  tool: string;
+  toolInitials: string;
+  toolColor: string;
+  task: string;
+  hoursSaved: number;
+  person: string;
+  time: string;
+};
+
+const seedActivity: LogEntry[] = [
+  { id: 3, text: "Summarized customer interview transcripts for Q3 research synthesis.", tool: "Claude Enterprise", toolInitials: "C", toolColor: "violet", task: "Research", hoursSaved: 3, person: "Priya N.", time: "26m ago" },
+  { id: 2, text: "Drafted first-pass RFP response for the Meridian account.", tool: "ChatGPT Enterprise", toolInitials: "O", toolColor: "green", task: "Drafting", hoursSaved: 2, person: "Sam O.", time: "1h ago" },
+  { id: 1, text: "Reviewed a contract-risk flag before sending to Legal.", tool: "Claude Enterprise", toolInitials: "C", toolColor: "violet", task: "Decision support", hoursSaved: 1, person: "Alex M.", time: "3h ago" },
+];
+
 function Mark() {
   return <span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>;
 }
@@ -40,6 +72,46 @@ const pageTitles: Record<string, { eyebrow: string; title: string }> = {
 
 export default function Dashboard({ view = "overview" }: { view?: string }) {
   const heading = pageTitles[view] ?? pageTitles.overview;
+
+  const [activities, setActivities] = useState<LogEntry[]>(seedActivity);
+  const [aiLeverage, setAiLeverage] = useState(62);
+  const [hoursReturned, setHoursReturned] = useState(18420);
+  const [valueRealized, setValueRealized] = useState(1840000);
+  const [text, setText] = useState("");
+  const [selectedTool, setSelectedTool] = useState(aiTools[0].name);
+  const [selectedTask, setSelectedTask] = useState(taskTypes[0]);
+  const [hoursSaved, setHoursSaved] = useState<number>(1);
+
+  function handleLogSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = text.trim();
+    if (!trimmed || hoursSaved <= 0) return;
+
+    const tool = aiTools.find((t) => t.name === selectedTool) ?? aiTools[0];
+    const entry: LogEntry = {
+      id: Date.now(),
+      text: trimmed,
+      tool: tool.name,
+      toolInitials: tool.initials,
+      toolColor: tool.color,
+      task: selectedTask,
+      hoursSaved,
+      person: "Alex M.",
+      time: "Just now",
+    };
+
+    setActivities((prev) => [entry, ...prev]);
+    setHoursReturned((prev) => prev + hoursSaved);
+    setValueRealized((prev) => prev + hoursSaved * VALUE_PER_HOUR);
+    setAiLeverage((prev) => Math.min(90, prev + hoursSaved * 0.15));
+    setText("");
+    setHoursSaved(1);
+  }
+
+  const humanAdvantage = Math.round(100 - aiLeverage);
+  const aiLeverageRounded = Math.round(aiLeverage);
+  const valueRealizedDisplay = `$${(valueRealized / 1_000_000).toFixed(2)}M`;
+
   return (
     <main className={`shell view-${view}`}>
       <aside className="sidebar">
@@ -74,23 +146,23 @@ export default function Dashboard({ view = "overview" }: { view?: string }) {
             <div className="eyebrow"><span>Coefficient score</span><span className="live-dot">● LIVE</span></div>
             <div className="score-row"><strong>72</strong><span>/ 100</span><Trend>6 pts</Trend></div>
             <h2>Your AI portfolio is creating measurable value.</h2>
-            <p>Teams recovered <b>18,420 hours</b> this quarter, while quality held steady. Three opportunities could unlock another <b>$410k</b> in annual value.</p>
+            <p>Teams recovered <b>{hoursReturned.toLocaleString()} hours</b> this quarter, while quality held steady. Three opportunities could unlock another <b>$410k</b> in annual value.</p>
             <button className="primary">View recommendations <span>→</span></button>
           </div>
-          <div className="value-map" aria-label="Value balance: 62 percent AI leverage and 38 percent human advantage">
+          <div className="value-map" aria-label={`Value balance: ${aiLeverageRounded} percent AI leverage and ${humanAdvantage} percent human advantage`}>
             <div className="map-heading"><div><span>Human + AI balance</span><h3>Where value is created</h3></div><span className="status">HEALTHY MIX</span></div>
             <div className="orbit">
               <div className="ring ring-one" /><div className="ring ring-two" /><div className="ring ring-three" />
-              <div className="core"><strong>62%</strong><small>AI leverage</small></div>
+              <div className="core"><strong>{aiLeverageRounded}%</strong><small>AI leverage</small></div>
               <span className="node node-a">Analysis</span><span className="node node-b">Creation</span><span className="node node-c">Decision</span><span className="node node-d">Empathy</span>
             </div>
-            <div className="balance"><span><i className="ai" /> AI leverage <b>62%</b></span><span><i className="human" /> Human advantage <b>38%</b></span></div>
+            <div className="balance"><span><i className="ai" /> AI leverage <b>{aiLeverageRounded}%</b></span><span><i className="human" /> Human advantage <b>{humanAdvantage}%</b></span></div>
           </div>
         </section>
 
         <section className="metric-grid" aria-label="Key performance indicators">
-          <article><div className="metric-icon purple">◴</div><p>Hours returned</p><div className="metric-value">18,420</div><small><Trend>14.2%</Trend> vs. prior period</small></article>
-          <article><div className="metric-icon green">$</div><p>Value realized</p><div className="metric-value">$1.84M</div><small><Trend>21.8%</Trend> vs. prior period</small></article>
+          <article><div className="metric-icon purple">◴</div><p>Hours returned</p><div className="metric-value">{hoursReturned.toLocaleString()}</div><small><Trend>14.2%</Trend> vs. prior period</small></article>
+          <article><div className="metric-icon green">$</div><p>Value realized</p><div className="metric-value">{valueRealizedDisplay}</div><small><Trend>21.8%</Trend> vs. prior period</small></article>
           <article><div className="metric-icon orange">◈</div><p>AI adoption</p><div className="metric-value">68%</div><small><Trend>8.4%</Trend> 1,463 active users</small></article>
           <article><div className="metric-icon red">⌁</div><p>Annual waste detected</p><div className="metric-value">$286k</div><small className="warning">↓ 14 redundant licenses</small></article>
         </section>
@@ -125,6 +197,103 @@ export default function Dashboard({ view = "overview" }: { view?: string }) {
             <p className="section-note">Highest-value opportunities based on repetition, data readiness, and judgment required.</p>
             {workflows.map((flow) => <div className="workflow" key={flow.name}><div><strong>{flow.name}</strong><span>{flow.team}</span></div><div className="flow-bar"><i style={{ width: `${flow.balance}%` }} /></div><em>{flow.potential}</em></div>)}
             <div className="spectrum"><span>Human-led</span><span>AI-led</span></div>
+
+            <div className="log-widget">
+              <div className="panel-title"><div><p>LOG ACTIVITY</p><h3>What did your team use AI for?</h3></div></div>
+              <form className="log-form" onSubmit={handleLogSubmit}>
+                <label className="log-field">
+                  <span className="log-field-label">Which AI tool</span>
+                  <div className="tool-select-row" role="radiogroup" aria-label="AI tool used">
+                    {aiTools.map((tool) => (
+                      <button
+                        type="button"
+                        key={tool.name}
+                        role="radio"
+                        aria-checked={selectedTool === tool.name}
+                        className={`tool-select-chip${selectedTool === tool.name ? " selected" : ""}`}
+                        onClick={() => setSelectedTool(tool.name)}
+                      >
+                        <span className={`tool-logo ${tool.color}`}>{tool.initials}</span>
+                        {tool.name}
+                      </button>
+                    ))}
+                  </div>
+                </label>
+
+                <label className="log-field">
+                  <span className="log-field-label">What was it used for</span>
+                  <input
+                    className="log-input"
+                    type="text"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    placeholder="e.g. Drafted the Q3 RFP response"
+                    aria-label="Describe what AI was used for"
+                  />
+                </label>
+
+                <label className="log-field">
+                  <span className="log-field-label">Task type</span>
+                  <div className="tag-row" role="radiogroup" aria-label="Task type">
+                    {taskTypes.map((task) => (
+                      <button
+                        type="button"
+                        key={task}
+                        role="radio"
+                        aria-checked={selectedTask === task}
+                        className={`tag-chip${selectedTask === task ? " selected" : ""}`}
+                        onClick={() => setSelectedTask(task)}
+                      >
+                        {task}
+                      </button>
+                    ))}
+                  </div>
+                </label>
+
+                <label className="log-field">
+                  <span className="log-field-label">Time saved vs. doing it manually</span>
+                  <div className="hours-row">
+                    {hoursPresets.map((h) => (
+                      <button
+                        type="button"
+                        key={h}
+                        className={`tag-chip${hoursSaved === h ? " selected" : ""}`}
+                        onClick={() => setHoursSaved(h)}
+                      >
+                        {h}h
+                      </button>
+                    ))}
+                    <input
+                      className="hours-input"
+                      type="number"
+                      min={0}
+                      step={0.5}
+                      value={hoursSaved}
+                      onChange={(e) => setHoursSaved(Number(e.target.value))}
+                      aria-label="Custom hours saved"
+                    />
+                    <span className="hours-preview">≈ ${(hoursSaved * VALUE_PER_HOUR).toLocaleString()} value</span>
+                  </div>
+                </label>
+
+                <button type="submit" className="recommendation-button log-submit">Log activity <span>→</span></button>
+              </form>
+
+              <div className="log-feed">
+                {activities.map((entry) => (
+                  <div className="log-feed-item" key={entry.id}>
+                    <div className="log-feed-head">
+                      <span className={`tool-logo sm ${entry.toolColor}`}>{entry.toolInitials}</span>
+                      <strong>{entry.tool}</strong>
+                      <span className="log-tag">{entry.task}</span>
+                      <span className="log-kpi">+{entry.hoursSaved}h · ${(entry.hoursSaved * VALUE_PER_HOUR).toLocaleString()}</span>
+                    </div>
+                    <p>{entry.text}</p>
+                    <div className="log-feed-meta"><span>{entry.person}</span><time>{entry.time}</time></div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </article>
         </section>
 
